@@ -3,27 +3,28 @@ from func import *
 
 def drawPwdLs(stdscr): #orta menü
     height, width = stdscr.getmaxyx()
-
     start_x = int((width // 2))
     start_y = int((height // 2) - 2)
     maxCol=width // 3-3
     max_row = height-5 #max number of rows
+    
+    highlightText = curses.color_pair( 2 )
+    normalText = curses.A_NORMAL
+
     box = curses.newwin( max_row + 2, maxCol, 1, start_x - maxCol//2 )
     box.box()
     boxParent=drawParent(stdscr)
     
-    highlightText = curses.color_pair( 2 )
-    normalText = curses.A_NORMAL
-    ourPwd = pwd()
-    list_ls = ls(ourPwd)
-    strings = list_ls
-    row_num = len( strings )
-    boxChild = drawChild(stdscr, strings[0])
     
+    ourPwd = pwd()
+    strings = ls(ourPwd)
+    row_num = len( strings )
+
+    boxChild = drawChild(stdscr, strings[0])
     
     statusbarstr = "Press 'q' to exit | STATUS BAR "
 
-    # Render Top Status bar
+    # Render Top Status bar             #linuxta subprocess ile çalıştırmamız lazım bence username ve hostname i. ssh ile bağlandığımızda orda sadece terminal komutları çalıştıracağız çünkü.
     userName = os.environ['USER']
     hostName = socket.gethostname()
     statusPwd=ourPwd
@@ -57,7 +58,7 @@ def drawPwdLs(stdscr): #orta menü
     box.refresh()
     boxParent.refresh()
     boxChild.refresh()
-    x = stdscr.getch()
+    x = stdscr.getch()  #bu box.getch() olabilir mi ? ama o zaman da quit mi olmaz bilemedim.
 
     while x != ord('q'):
                  
@@ -65,14 +66,14 @@ def drawPwdLs(stdscr): #orta menü
             if page == 1:
                 if position < i:
                     position = position + 1
-                else:
+                else:   #elif?
                     if pages > 1:
                         page = page + 1
                         position = 1 + ( max_row * ( page - 1 ) )
             elif page == pages:
                 if position < row_num:
                     position = position + 1
-            else:
+            else:   #elif?
                 if position < max_row + ( max_row * ( page - 1 ) ):
                     position = position + 1
                 else:
@@ -83,7 +84,7 @@ def drawPwdLs(stdscr): #orta menü
             if page == 1:
                 if position > 1:
                     position = position - 1
-            else:
+            else:   #elif?
                 if position > ( 1 + ( max_row * ( page - 1 ) ) ):
                     position = position - 1
                 else:
@@ -92,15 +93,14 @@ def drawPwdLs(stdscr): #orta menü
             refreshChild(boxChild, ourPwd, stdscr, strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
 
   
-        if x == curses.KEY_LEFT:    #sol oka basıldığında olanlar vs        
+        if x == curses.KEY_LEFT:    #sol oka basıldığında olanlar vs    #ourPwd nin uzunluğu 1 değilse çalıştırabiliriz belki     
             
             ourPwd = ourPwd[:ourPwd.rfind("/")] #pathin son slashtan sonrasını sil oraya git.
 
             if not ourPwd or len(ourPwd)<2:     #pathhte ki sorunları giderme
                 ourPwd = '/'
                 
-            list_ls = ls( ourPwd )
-            strings = list_ls
+            strings = ls( ourPwd )
             row_num = len( strings )
             
             #refreshParent return degeri position'a verildi. Dizinden devam etmek için.
@@ -127,8 +127,7 @@ def drawPwdLs(stdscr): #orta menü
                 pages = int( ceil( row_num / max_row ) )
                 position = 1
                 page = 1
-                if row_num == 0:
-                    
+                if row_num == 0:                    
                     boxChild.erase()
                     boxChild.refresh()
                 else:
@@ -138,11 +137,11 @@ def drawPwdLs(stdscr): #orta menü
                 box.refresh()
                 stdscr.refresh()
 
-        
-        if x == ord( "\n" ) and row_num != 0:
-            stdscr.erase()
-            #stdscr.border( 0 )
-            stdscr.addstr( 14, 3, "YOU HAVE PRESSED '" + strings[ position - 1 ] + "' ON POSITION " + str( position ) )
+        #Enter a basınca yazan yazı
+        # if x == ord( "\n" ) and row_num != 0:
+        #     stdscr.erase()
+        #     #stdscr.border( 0 )
+        #     stdscr.addstr( 14, 3, "YOU HAVE PRESSED '" + strings[ position - 1 ] + "' ON POSITION " + str( position ) )
 
         box.erase()
         
@@ -160,6 +159,7 @@ def drawPwdLs(stdscr): #orta menü
                     box.addstr( i - ( max_row * ( page - 1 ) ), 2, str( i ) + " - " + strings[ i - 1 ], normalText )
                 if i == row_num:
                     break
+        
         statusPwd=ourPwd
         if statusPwd.startswith("/home/"+userName):
                 statusPwd = statusPwd.replace("/home/"+userName, "~")
@@ -167,7 +167,7 @@ def drawPwdLs(stdscr): #orta menü
         if row_num != 0:
             stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+strings[position -1]+"\t\t\t\t\t" )  
         else:
-            stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+"\t\t\t\t\t\t\t" )  
+            stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+"\t\t\t\t\t\t\t" )  #strings[position -1] ekleyecek miyiz?
         
             
 

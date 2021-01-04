@@ -27,8 +27,8 @@ def ls(path):
 
 def refreshChild(boxChild,ourPwd,stdscr,selectedDir): #if os.path.isdir(path):
     boxChild.erase()
+    
     height, width = stdscr.getmaxyx()
-
     start_x = int((width // 2))
     start_y = int((height // 2) - 2)
     maxCol=width // 3-3
@@ -51,13 +51,9 @@ def refreshChild(boxChild,ourPwd,stdscr,selectedDir): #if os.path.isdir(path):
         stdscr.refresh()
         boxChild.refresh()
         return -1
-    list_ls = ls(childPwd)
-    strings = list_ls
+    strings = ls(childPwd)
     row_num = len( strings )
     position = 1
-
-    
-
     
 
     for i in range( 1, max_row  + 1 ):
@@ -86,10 +82,9 @@ def refreshParent(boxParent,ourPwd,stdscr):
     maxCol=width // 3-3
     max_row = height-5 #max number of rows
 
-    list_ls = lsP( ourPwd )
-    strings = list_ls
+    strings = lsP( ourPwd )
     row_num = len( strings )
-    pPosition = 0
+    position = 0
 
     highlightText = curses.color_pair( 2 )
     normalText = curses.A_NORMAL
@@ -101,7 +96,7 @@ def refreshParent(boxParent,ourPwd,stdscr):
             if strings[i -1] == ourPwd.split('/')[-1]: #l
                 #boxParent.addstr( i, 2, str( i ) + " - " + strings[ i - 1 ], highlightText )
                 boxParent.addstr( i, 2, str( i ) + " - " + ourPwd.split('/')[-1], highlightText )
-                pPosition = i
+                position = i
             else:
                 boxParent.addstr( i, 2, str( i ) + " - " + strings[ i - 1 ], normalText )
             #boxParent.addstr( 20, 2, str( 61 ) + " - " + ourPwd.split('/')[-1], highlightText )
@@ -111,7 +106,7 @@ def refreshParent(boxParent,ourPwd,stdscr):
     boxParent.border( 0 )
     stdscr.refresh()
     boxParent.refresh()
-    return pPosition
+    return position
 
 
 def drawChild(stdscr, selectedDir): #if os.path.isdir(path):
@@ -135,8 +130,7 @@ def drawChild(stdscr, selectedDir): #if os.path.isdir(path):
     else:
         childPwd = pwd() +"/"+selectedDir
     
-    list_ls = ls(childPwd)
-    strings = list_ls
+    strings = ls(childPwd)
     row_num = len( strings )
     
     #boxChild.addstr( 25, 2, str( 61 ) + " - " + pwd()+selectedDir, highlightText )
@@ -196,11 +190,8 @@ def drawParent(stdscr): #sol menü
     highlightText = curses.color_pair( 2 )
     normalText = curses.A_NORMAL
 
-    list_ls = lsP(pwd())
-    strings = list_ls
-    row_num = len( strings )
-    
-    
+    strings = lsP(pwd())
+    row_num = len( strings )    
     
 
     statusbarstr = "Press 'q' to exit | STATUS BAR "
@@ -239,4 +230,3 @@ def drawParent(stdscr): #sol menü
 
     # stdscr.refresh()
     # boxParent.refresh()
-    
