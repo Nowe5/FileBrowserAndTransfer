@@ -70,30 +70,27 @@ def drawPwdLs(stdscr): #orta menü
             if page == 1:
                 if position < i:
                     position = position + 1
-                else:   #elif?
-                    if pages > 1:
-                        page = page + 1
-                        position = 1 + ( max_row * ( page - 1 ) )
+                elif pages > 1:
+                    page = page + 1
+                    position = 1 + ( max_row * ( page - 1 ) )
             elif page == pages:
                 if position < row_num:
                     position = position + 1
-            else:   #elif?
-                if position < max_row + ( max_row * ( page - 1 ) ):
+            elif position < max_row + ( max_row * ( page - 1 ) ):
                     position = position + 1
-                else:
-                    page = page + 1
-                    position = 1 + ( max_row * ( page - 1 ) )
+            else:
+                page = page + 1
+                position = 1 + ( max_row * ( page - 1 ) )
             refreshChild(boxChild, ourPwd, stdscr, strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
         if x == curses.KEY_UP and not row_num == 0:
             if page == 1:
                 if position > 1:
                     position = position - 1
-            else:   #elif?
-                if position > ( 1 + ( max_row * ( page - 1 ) ) ):
-                    position = position - 1
-                else:
-                    page = page - 1
-                    position = max_row + ( max_row * ( page - 1 ) )
+            elif position > ( 1 + ( max_row * ( page - 1 ) ) ):
+                position = position - 1
+            else:
+                page = page - 1
+                position = max_row + ( max_row * ( page - 1 ) )
             refreshChild(boxChild, ourPwd, stdscr, strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
 
   
@@ -108,7 +105,7 @@ def drawPwdLs(stdscr): #orta menü
             row_num = len( strings )
             
             #refreshParent return degeri position'a verildi. Dizinden devam etmek için.
-            #todo : position değeri dizinden devam ettirilecek.
+            #TODO : position değeri dizinden devam ettirilecek.
             
             pages = int( ceil( row_num / max_row ) )
             position = 1
@@ -141,10 +138,9 @@ def drawPwdLs(stdscr): #orta menü
             box.refresh()
             stdscr.refresh()
         
-        if x == ord("L") and not row_num == 0 and not os.path.isfile(strings[position-1]):
+        if x == ord("L") :
             cred=drawLogin(stdscr)
             
-            #TODO bişeler
             
         #Enter a basınca yazan yazı
         # if x == ord( "\n" ) and row_num != 0:

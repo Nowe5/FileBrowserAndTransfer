@@ -158,6 +158,7 @@ def drawLogin(stdscr):
             stdscr.refresh()
             input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
 
+        #TODO port numarası alınabilir
     return input
 
 def drawChild(stdscr, selectedDir): #if os.path.isdir(path):
