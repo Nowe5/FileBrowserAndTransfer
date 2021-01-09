@@ -1,4 +1,5 @@
 from func import *
+#from ssh import *
 
 
 def drawPwdLs(stdscr): #orta menü
@@ -16,6 +17,9 @@ def drawPwdLs(stdscr): #orta menü
     boxParent=drawParent(stdscr)
     
     
+    #ssh > ssh connection > control server or client > change ranger >
+
+
     ourPwd = pwd()
     strings = ls(ourPwd)
     row_num = len( strings )
@@ -115,28 +119,33 @@ def drawPwdLs(stdscr): #orta menü
             box.refresh()
             stdscr.refresh()
 
-        if x == curses.KEY_RIGHT and not row_num == 0 and not os.path.isfile(strings[position-1]):
+        if x == curses.KEY_RIGHT and not row_num == 0 and os.path.isdir(ourPwd+"/"+strings[position-1]):
+             
+            if not ourPwd or len(ourPwd)<2:     #pathhte ki sorunları giderme
+                ourPwd = "/"+strings[position -1]
+            else:
+                ourPwd += '/' + strings[position -1]
+            strings = ls( ourPwd )
+            row_num = len( strings )
             
-                if not ourPwd or len(ourPwd)<2:     #pathhte ki sorunları giderme
-                    ourPwd = "/"+strings[position -1]
-                else:
-                    ourPwd += '/' + strings[position -1]
-                strings = ls( ourPwd )
-                row_num = len( strings )
-                
-                pages = int( ceil( row_num / max_row ) )
-                position = 1
-                page = 1
-                if row_num == 0:                    
-                    boxChild.erase()
-                    boxChild.refresh()
-                else:
-                    refreshChild(boxChild, ourPwd,stdscr ,strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
-                
-                refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
-                box.refresh()
-                stdscr.refresh()
-
+            pages = int( ceil( row_num / max_row ) )
+            position = 1
+            page = 1
+            if row_num == 0:                    
+                boxChild.erase()
+                boxChild.refresh()
+            else:
+                refreshChild(boxChild, ourPwd,stdscr ,strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
+            
+            refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
+            box.refresh()
+            stdscr.refresh()
+        
+        if x == ord("L") and not row_num == 0 and not os.path.isfile(strings[position-1]):
+            cred=drawLogin(stdscr)
+            
+            #TODO bişeler
+            
         #Enter a basınca yazan yazı
         # if x == ord( "\n" ) and row_num != 0:
         #     stdscr.erase()

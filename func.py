@@ -9,8 +9,12 @@ def pwd():
     return firstPwd
 
 def lsP(path):
+    Ppath=path
     
-    output_ls=subprocess.check_output(['ls', path+"/.."]).decode('utf-8')
+    Ppath=Ppath[0:Ppath.rfind('/')]  
+    if len(Ppath) <2:
+        Ppath='/'  
+    output_ls=subprocess.check_output(['ls', Ppath]).decode('utf-8')
     return output_ls.splitlines()
 
 def ls(path):
@@ -39,7 +43,7 @@ def refreshChild(boxChild,ourPwd,stdscr,selectedDir): #if os.path.isdir(path):
 
     childPwd='/'
     # / değilse / koy
-    if ourPwd is "/":
+    if ourPwd == "/":
         childPwd = ourPwd + selectedDir 
         
     else:
@@ -108,6 +112,53 @@ def refreshParent(boxParent,ourPwd,stdscr):
     boxParent.refresh()
     return position
 
+def drawLogin(stdscr):
+    height, width = stdscr.getmaxyx()
+
+    start_x = int((width)//2)-20
+    start_y = int((height // 2))-2
+    maxCol=40
+    max_row = 3 #max number of rows
+    boxLogin= curses.newwin( max_row + 2, maxCol, start_y, start_x  )
+    boxLogin.box()
+    boxLogin.border( 0 )
+
+    highlightText = curses.color_pair( 2 )
+    normalText = curses.A_NORMAL
+
+    curses.cbreak()
+    curses.noecho()
+    input = []
+    for i in range(3):
+        if i == 0:
+            curses.echo() 
+            boxLogin.addstr(1,1, "Login Information")
+            boxLogin.addstr(2,1, "Username")
+            boxLogin.refresh()
+            stdscr.refresh()
+            input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
+            #TODO girişleri kontrol et fonksiyon yaz vs
+        if i == 1:
+            boxLogin.clear()
+            boxLogin.border( 0 )
+            curses.echo() 
+            boxLogin.addstr(1,1, "Login Information")
+            boxLogin.addstr(2,1, "IP")
+            boxLogin.refresh()
+            stdscr.refresh()
+            input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
+        if i == 2:
+            boxLogin.clear()
+            boxLogin.border( 0 )
+            curses.cbreak()
+            curses.noecho()
+            boxLogin.addstr(1,1, "Login Information")
+            boxLogin.addstr(2,1, "Password:")
+            boxLogin.refresh()
+            stdscr.refresh()
+            input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
+
+    return input
 
 def drawChild(stdscr, selectedDir): #if os.path.isdir(path):
 
@@ -124,7 +175,7 @@ def drawChild(stdscr, selectedDir): #if os.path.isdir(path):
     normalText = curses.A_NORMAL
     
     childPwd='/'
-    if pwd() is "/":
+    if pwd() == "/":
         childPwd = pwd() + selectedDir 
         
     else:
