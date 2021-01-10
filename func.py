@@ -306,6 +306,7 @@ def drawParent(stdscr): #sol menü
             if strings[i -1] == pwd().split('/')[-1]: #l
                 #boxParent.addstr( i, 2, str( i ) + " - " + strings[ i - 1 ], highlightText )
                 boxParent.addstr( i, 2, str( i ) + " - " + pwd().split('/')[-1], highlightText )
+                position=i
             else:
                 boxParent.addstr( i, 2, str( i ) + " - " + strings[ i - 1 ], normalText )
             if i == row_num:
@@ -318,7 +319,7 @@ def drawParent(stdscr): #sol menü
     #stdscr.border( 0 )
     boxParent.border( 0 )
 
-    return boxParent
+    return boxParent,position
 
 
     # stdscr.refresh()

@@ -14,7 +14,7 @@ def drawPwdLs(stdscr): #orta menü
 
     box = curses.newwin( max_row + 2, maxCol, 1, start_x - maxCol//2 )
     box.box()
-    boxParent=drawParent(stdscr)
+    boxParent,tag=drawParent(stdscr)
     
     
     #ssh > ssh connection > control server or client > change ranger >
@@ -47,6 +47,7 @@ def drawPwdLs(stdscr): #orta menü
     pages = int( ceil( row_num / max_row ) )
     position = 1
     page = 1
+
     for i in range( 1, max_row  + 1 ):
         if row_num == 0:
             box.addstr( 1, 1, "There aren't strings", highlightText )
@@ -108,11 +109,20 @@ def drawPwdLs(stdscr): #orta menü
             #TODO : position değeri dizinden devam ettirilecek.
             
             pages = int( ceil( row_num / max_row ) )
-            position = 1
+                  #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
+           
+            position = tag
             page = 1
             
-            refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
-            refreshChild(boxChild, ourPwd, stdscr, strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
+            if ourPwd == "/":
+                                 
+                boxParent.erase()
+                boxParent.refresh()
+            else:
+                
+                tag = refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
+            
+            refreshChild(boxChild, ourPwd, stdscr, strings[position-1])
             box.refresh()
             stdscr.refresh()
 
@@ -128,13 +138,17 @@ def drawPwdLs(stdscr): #orta menü
             pages = int( ceil( row_num / max_row ) )
             position = 1
             page = 1
+            #tag=1
+            
             if row_num == 0:                    
                 boxChild.erase()
                 boxChild.refresh()
             else:
                 refreshChild(boxChild, ourPwd,stdscr ,strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
             
-            refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
+            #position = tag
+            
+            tag = refreshParent(boxParent,ourPwd,stdscr) #[:ourPwd.rfind("/")]
             box.refresh()
             stdscr.refresh()
         
@@ -153,7 +167,7 @@ def drawPwdLs(stdscr): #orta menü
         #stdscr.border( 0 )
         box.border( 0 )
         
-
+        
         for i in range( 1 + ( max_row * ( page - 1 ) ), max_row + 1 + ( max_row * ( page - 1 ) ) ):
             if row_num == 0:
                 box.addstr( 1, 1, "There aren't strings",  highlightText )
@@ -188,6 +202,7 @@ def drawPwdLs(stdscr): #orta menü
 
         stdscr.refresh()
         box.refresh()
+        
         x = stdscr.getch()
 
 def draw_menu(stdscr):
