@@ -112,6 +112,31 @@ def refreshParent(boxParent,ourPwd,stdscr):
     boxParent.refresh()
     return position
 
+def controlButton(boxLogin):
+    x = boxLogin.getch()
+    if x == '\t':
+        boxLogin.addstr(3,1, "Exit:",highlightText)
+        x = boxLogin.getch()
+        if x == '\n':
+            boxLogin.clear()
+            return 1
+    return 0
+
+def getCred(stdscr,input):
+    x = stdscr.getch()
+    order=0
+    while x != 'esc':
+
+        if x == '\n':
+            order+=1
+
+        input[order]+=str(x)
+
+        if order == 4:
+            return input
+
+    return -1
+        
 def drawLogin(stdscr):
     height, width = stdscr.getmaxyx()
 
@@ -128,32 +153,48 @@ def drawLogin(stdscr):
 
     curses.cbreak()
     curses.noecho()
+    
+
     input = []
-    for i in range(3):
+    for i in range(4):
         if i == 0:
             curses.echo() 
             boxLogin.addstr(1,1, "Login Information")
-            boxLogin.addstr(2,1, "Username")
+            boxLogin.addstr(2,1, "Username:")
+            boxLogin.addstr(3,1, "Exit",normalText)
             boxLogin.refresh()
             stdscr.refresh()
+            
+            if controlButton(boxLogin) == 1:
+                return input
+
             input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
             #TODO girişleri kontrol et fonksiyon yaz vs
-        if i == 1:
+        elif i == 1:
             boxLogin.clear()
             boxLogin.border( 0 )
             curses.echo() 
             boxLogin.addstr(1,1, "Login Information")
-            boxLogin.addstr(2,1, "IP")
+            boxLogin.addstr(2,1, "IP:")
             boxLogin.refresh()
             stdscr.refresh()
             input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
-        if i == 2:
+        elif i == 2:
             boxLogin.clear()
             boxLogin.border( 0 )
             curses.cbreak()
             curses.noecho()
             boxLogin.addstr(1,1, "Login Information")
             boxLogin.addstr(2,1, "Password:")
+            boxLogin.refresh()
+            stdscr.refresh()
+            input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))
+        elif i == 3:
+            boxLogin.clear()
+            boxLogin.border( 0 )
+            curses.echo() 
+            boxLogin.addstr(1,1, "Login Information")
+            boxLogin.addstr(2,1, "Port Number:")
             boxLogin.refresh()
             stdscr.refresh()
             input.append( boxLogin.getstr(2 + 1, 1, 40).decode('utf-8'))

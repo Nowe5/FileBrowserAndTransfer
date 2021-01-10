@@ -168,11 +168,15 @@ def drawPwdLs(stdscr): #orta menü
         statusPwd=ourPwd
         if statusPwd.startswith("/home/"+userName):
                 statusPwd = statusPwd.replace("/home/"+userName, "~")
-        #todo: statıs
+        #todo: status
         if row_num != 0:
-            stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+strings[position -1]+"\t\t\t\t\t" )  
+            if len(statusPwd) != 1 or statusPwd.startswith('~'):
+                stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+strings[position -1]+"\t\t\t\t\t" )  
+            else:
+                stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd +strings[position -1]+"\t\t\t\t\t" )   # / dizininde iki kere / yazıyordu yani //bin gibi
+            
         else:
-            stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+"\t\t\t\t\t\t\t" )  #strings[position -1] ekleyecek miyiz?
+            stdscr.addstr(0, 2, userName+"@"+ hostName+" " +statusPwd + "/"+"\t\t\t\t\t\t\t" ) 
         
             
 
@@ -228,7 +232,11 @@ def draw_menu(stdscr):
     #k = stdscr.getch()
 
 def main():
-    curses.wrapper(draw_menu)
+    try:
+        curses.wrapper(draw_menu)
+    except KeyboardInterrupt:
+        #TODO close ssh connection bla bla
+        pass
 
 if __name__ == "__main__":
     main()
