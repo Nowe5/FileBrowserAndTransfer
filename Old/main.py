@@ -14,9 +14,6 @@ class ssh_file_manager():
 
 
 
-        left - middle - right
-                 v
-
 
 
         k = 0
