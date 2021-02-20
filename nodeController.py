@@ -74,6 +74,13 @@ class DoublyLinkedList:
         self.startNode = None   # start node ilk oluşturulan node da dursun her zaman
         self.current = None     # current node anlık işlem yaptığımız node da olacak
         self.header = None      # listenin başını işaret ettiğimiz node
+        
+        self.insertInEmptyList()
+        self.insertPref()
+        
+
+
+        
     
     #checked 
     def insertInEmptyList(self):
@@ -83,18 +90,17 @@ class DoublyLinkedList:
             self.header = newNode
             self.current = newNode
         else:
-            print("list is not empty")
+            return False
 
-    #checked        
-    def getPrefDir(self): # current path i al son klasörü sil
-        index = self.current.dir.rfind('/')
-        parentDir = self.current.dir[:index]
-        if parentDir.count('/') == 0:
-             parentDir = '/'
-        print(parentDir)
-        input("parent dir")
-        return parentDir
-        #TODO get parent directory
+    # #checked        
+    # def getPrefDir(self): # current path i al son klasörü sil
+    #     index = self.current.dir.rfind('/')
+    #     parentDir = self.current.dir[:index]
+    #     if parentDir.count('/') == 0:
+    #          parentDir = '/'
+        
+    #     return parentDir
+    #     #TODO get parent directory
 
     #checked   
     def getPrefDir(self,path = None):
@@ -106,25 +112,25 @@ class DoublyLinkedList:
     #checked
     def getPrefPosition(self):
         pRefDir = self.getPrefDir()
-        print(pRefDir)
+        
         names = self.current.ls(pRefDir)
-    
-        return names.index(self.current.baseName)
+        
+        return names.index(self.current.baseName) + 1
+
         #pass
         #TODO get parent possition. sola giderken pRef tanımlı olmadığı için pRef pozisyonu bilinmiyor. bilinmediği için insertpRef fonksiyonunda newNode'un nref i atanamıyor. 
     
     #checked
     def appendNref(self):   # / da iken / eklemek sorun olabilir if le bişeler yap
-        print(self.current.dir)
-        print(self.current.fileNames[self.current.position - 1])
-        
+  
         slash='/'
         if  self.current.dir == '/':
             slash=''
 
+        
         newNode = Node(self.current.dir+slash+self.current.fileNames[self.current.position - 1])
         newNode.pRef = self.current
-        newNode.printNode()
+        #newNode.printNode()
         self.current.nRef[self.current.position - 1] = newNode
         #self.current.printNode()
         self.current = newNode
@@ -136,16 +142,16 @@ class DoublyLinkedList:
             self.insertInEmptyList()
             return
 
-        if self.current.pRef is None :    
+        if self.current.pRef is None and self.current.dir != "/":    
             newNode = Node(self.getPrefDir())
             newNode.nRef[self.getPrefPosition()] = self.current      #   -1 ???
+            newNode.position = self.getPrefPosition()#Pref position atandı.
             self.current.pRef = newNode
-            self.current = self.current.pRef
-            if self.current.dir == '/':
-                self.current.pRef = self.current        # sola eklediğimiz yeni node'un pref'ini kendine döndürdük.
+            #self.current = self.current.pRef
+            if self.current.pRef.dir == '/':
+                self.current.pRef.pRef = self.current.pRef       # sola eklediğimiz yeni node'un pref'ini kendine döndürdük.
             self.header = self.current              # sağa gelip tekrar sola gidince node oluşturursa burası headerın içinden geçebilir
-            newNode.printNode()
-            input("newnode")
+
       
     def delete_element_by_value(self, nodeToDelete=None):
 
@@ -153,14 +159,14 @@ class DoublyLinkedList:
             nodeToDelete=self.current 
             
         if self.startNode is None:
-            print("The list has no node to delete")
-            return 
+            #print("The list has no node to delete")
+            return False
         if not self.startNode.nref:
             if self.startNode == nodeToDelete:
                 self.startNode = None
             else:
-                print("Node not found")
-            return 
+                #print("Node not found")
+                return False
 
         # if self.startNode == nodeToDelete:
         #     self.startNode = self.startNode.nref
@@ -170,8 +176,8 @@ class DoublyLinkedList:
         n = self.header
 
         if not nodeToDelete.dir.startswith(n.dir):
-            print("The File has not in Nodes")
-            return 
+            #print("The File has not in Nodes")
+            return False
         else:
             searhingList = nodeToDelete.dir[len(n.dir)-1:].split('/')
         
@@ -179,7 +185,7 @@ class DoublyLinkedList:
                 if n.nRef.index(file):
                     n = n.nRef[n.nRef.index(file)]
                 else: 
-                    print("The file not found")
+                    #print("The file not found")
                     break       
                 if n.dir == nodeToDelete.dir:
                     n.pRef.nRef[n.pRef.nRef.index(file)]=None

@@ -1,0 +1,9 @@
+todo
+    aşağı yukarı yapınca currentda
+        selectedfileinfo yu editle
+        
+    sol sağ yapınca
+        rowNum
+
+    resize olunca
+        maxRow
