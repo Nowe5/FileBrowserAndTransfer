@@ -8,8 +8,8 @@ class Node:
         self.dir=path                   # from pwd
         self.baseName=self.basename()
         self.status = self.stat(self.dir)
-        self.page= 1                    #page
         self.position= 1
+        self.page= 1                    #page
         self.fileNames=self.ls()             # ls path | for hidden file -a
         self.selectedFileInfo=None
         #self.fileInfo=[] #stat -c %A `PATH` | %a parameter for 777
@@ -161,7 +161,7 @@ class DoublyLinkedList:
         if self.startNode is None:
             #print("The list has no node to delete")
             return False
-        if not self.startNode.nref:
+        if not self.startNode.nRef:
             if self.startNode == nodeToDelete:
                 self.startNode = None
             else:

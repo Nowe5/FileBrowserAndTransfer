@@ -16,6 +16,7 @@ class buttonController:
         while KEY is not self.KEY_EXIT:
             
             if KEY == curses.KEY_DOWN:
+                
                 self.KEY_DOWN_PRESSED()
 
             elif KEY == curses.KEY_UP:
@@ -30,21 +31,22 @@ class buttonController:
             KEY = self.stdscr.getch()
             
     def KEY_DOWN_PRESSED(self):
-        if  self.box.dList.current.position < len( self.box.dList.current.fileNames):
-            self.box.dList.current.position += 1
-            self.box.dList.current.selectedFileInfo =  self.box.dList.current.stat()
-            self.box.updateCurrent()
-            self.box.updateChild()
+        self.box.selectPagePosDOWN()
+
+        self.box.dList.current.selectedFileInfo =  self.box.dList.current.stat()
+        self.box.updateCurrent()
+        self.box.updateChild()
 
     def KEY_UP_PRESSED(self):
-        if  self.box.dList.current.position > 1:
-            self.box.dList.current.position -= 1
-            self.box.dList.current.selectedFileInfo =  self.box.dList.current.stat()
-            self.box.updateCurrent()
-            self.box.updateChild()
+        self.box.selectPagePosUP()
+        
+        self.box.dList.current.selectedFileInfo =  self.box.dList.current.stat()
+        self.box.updateCurrent()
+        self.box.updateChild()
 
 
     def KEY_LEFT_PRESSED(self):
+
         self.box.dList.current = self.box.dList.current.pRef
         # self.box.dList.current =  self.box.dList.current.pRef
         self.box.dList.insertPref()

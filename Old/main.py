@@ -134,7 +134,10 @@ class ssh_file_manager():
                     page = page + 1
                     position = 1 + ( max_row * ( page - 1 ) )
                 refreshChild(boxChild, ourPwd, stdscr, strings[position -1])      #refreshChild(boxChild,ourPwd,stdscr,selectedDir)
+            
+            
             if x == curses.KEY_UP and not row_num == 0:
+                
                 if page == 1:
                     if position > 1:
                         position = position - 1
